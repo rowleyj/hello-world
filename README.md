@@ -1,3 +1,9 @@
-# hello-world
+Express js file; contributors: Jesse Rowley, Adam Caddy
 
-//goodbye world! *a bit of sarcasm > some sugar & spice
+Things Added:
+
+
+Things to do:
+
+
+Notes:
