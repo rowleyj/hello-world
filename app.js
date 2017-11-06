@@ -24,6 +24,30 @@ app.get('/',function (req, res){
       title: 'Audiophiles',
     });
 });
+//get browse ejs
+app.get('/browse',function (req, res){
+  res.render('browse',{
+      title: 'Audiophiles',
+    });
+});
+// get upload ejs
+app.get('/upload',function (req, res){
+  res.render('upload',{
+      title: 'Audiophiles',
+    });
+});
+// get login ejs
+app.get('/login',function (req, res){
+  res.render('login',{
+      title: 'Audiophiles',
+    });
+});
+//include get signup ejs
+app.get('/signup',function (req, res){
+  res.render('signup',{
+      title: 'Audiophiles',
+    });
+});
 
 
   //set app.js to port 8080
