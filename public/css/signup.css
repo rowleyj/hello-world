@@ -1,0 +1,22 @@
+.signup{
+    background: aqua; /* For browsers that do not support gradients */
+    background: -webkit-linear-gradient(aqua, yellow, purple); /* For Safari 5.1 to 6.0 */
+    background: -o-linear-gradient(aqua, yellow, purple); /* For Opera 11.1 to 12.0 */
+    background: -moz-linear-gradient(aqua, yellow, purple); /* For Firefox 3.6 to 15 */
+    background: linear-gradient(aqua,yellow, purple); /* Standard syntax */
+
+  height: 100%;
+}
+.signupForm{
+  margin-top: 5%;
+  width: 18%;
+  margin-left:41%;
+  height: 150px;
+}
+label{
+  margin:10px;
+  font-weight: bold;
+}
+input{
+  float: right;
+}

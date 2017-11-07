@@ -7,3 +7,15 @@
 
   height: 100%;
 }
+.uploadForm{
+  width: 14%;
+  margin-left:43%;
+  height: 150px;
+}
+label{
+  margin:10px;
+  font-weight: bold;
+}
+input{
+  float: right;
+}
