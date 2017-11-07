@@ -70,28 +70,3 @@ button#next{
 	padding:3px;
 	background:#666;
 }
-
-#progressBar {
-   width:80%;
-   margin-left:2%;
-   margin-bottom:20px;
-   margin-top:9px;
-   height:10px;
-   background:url(../images/mediaplayer/progress_bg.png) no-repeat;
-   float:left;
-}
-
-#progress {
-   background:url(../images/mediaplayer/progress.png) no-repeat;
-   height:10px;
-   display:inline-block;
-}
-
-#duration{
-	position:absolute;
-	top:0;
-	right:10px;
-	padding:4px 8px;
-	background:#000;
-	border-radius:5px;
-}

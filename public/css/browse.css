@@ -1,0 +1,18 @@
+#tagSearch{
+  float: right;
+}
+.library{
+  overflow: auto;
+  border: solid black 5px;
+  background-color: aqua;
+  height: 70%;
+}
+.browse{
+    background: aqua; /* For browsers that do not support gradients */
+    background: -webkit-linear-gradient(aqua, yellow, orange); /* For Safari 5.1 to 6.0 */
+    background: -o-linear-gradient(aqua, yellow, orange); /* For Opera 11.1 to 12.0 */
+    background: -moz-linear-gradient(aqua, yellow, orange); /* For Firefox 3.6 to 15 */
+    background: linear-gradient(aqua,yellow, orange); /* Standard syntax */
+
+  height: 100%;
+}
