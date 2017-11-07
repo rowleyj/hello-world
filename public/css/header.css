@@ -4,6 +4,10 @@ header{
 body{
   background-color: black;
 }
+#title{
+  float: left;
+  font-weight: bolder;
+}
 
 li{
   color: black;

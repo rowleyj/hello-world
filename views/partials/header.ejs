@@ -3,21 +3,46 @@
   <title>AudioPhiles</title>
   <meta charset="UTF-8">
   <link rel="stylesheet" href="../css/header.css">
-  <link rel="stylesheet" href="../css/browse.css">
+  <link rel="stylesheet" href="../css/mediaplayer.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script> <!-- jquery cdn -->
   <script src="js/main.js"></script>
   <script src="../js/mediaplayer.js"></script>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"> <!-- bootstrap cdn -->
 </head>
 <header class="container-fluid">
-  <ul class="nav navbar-nav navbar-left">
-     <li><a href="/browse">Browse</a></li>
-     <li><a href="/upload">Upload</a></li>
-   </ul>
+
+
   <ul class="nav navbar-nav navbar-right">
+    <li><a href="/browse">Browse</a></li>
+    <li><a href="/upload">Upload</a></li>
      <li><a href="/signup">Sign Up</a></li>
      <li><a href="/login">Login</a></li>
    </ul>
-    <h1> <a href="/">AudioPhiles</a> </h1>
+   <h1 id="title"> <a href="/">AudioPhiles</a> </h1>
+   <div id="buttons">
+   <span>
+    <button id="prev"></button> <!-- LAST SONG -->
+    <button id="play"></button> <!-- PLAY -->
+    <button id="pause"></button> <!-- PAUSE -->
+    <button id="next"></button> <!-- NEXT -->
+    </span>
+   </div>
+   <br>
+   <br>
+    <input id="volume" type="range" min="0" max="10" value="5" />  <!-- VOLUME CONTROL -->
+
+<!-- MEDIA PLAYER -->
+
+
+
+
+
+
+
+</div>
+
+</div>
+
+
 </header>
 <body>

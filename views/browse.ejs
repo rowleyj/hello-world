@@ -1,11 +1,4 @@
 <% include partials/header %>
-<h1>browse</h1>
-<br>
-<br>
-<br>
-<h2>media player</h2>
-<!-- PLAY, PAUSE, NEXT, LAST, VOLUME, TIME CHANGE -->
-
 <div id="container">
 	<div id="audio-image"> <!-- ALBUM COVER -->
 		<img class="cover" />
@@ -14,31 +7,12 @@
 		<div id="audio-info">  <!-- ARTIST/TITLE -->
 			<span class="artist"></span> - <span class="title"></span>
 		</div>
-		 <input id="volume" type="range" min="0" max="10" value="5" />  <!-- VOLUME CONTROL -->
-		 <br>
-		 <div id="buttons">
-		 <span>
-			<button id="prev"></button> <!-- LAST SONG -->
-			<button id="play"></button> <!-- PLAY -->
-			<button id="pause"></button> <!-- PAUSE -->
-			<button id="next"></button> <!-- NEXT -->
-			</span>
-		 </div>
-		 <div class="clearfix"></div>
 		 <div id="tracker">
 			<div id="progressBar">
 				<span id="progress"></span>
 			</div>
 			<span id="duration"></span> <!-- where song is in duration -->
 		 </div>
-		 <div class="clearfix"></div> <!-- clear floats -->
-		 <ul id="playlist" class="hidden">
-       <!-- Will need to built server side app that will upload songs here using a form input-->
-
-			<li song="Boii.mp3" cover="tv_joshiiboii.jpg" artist="Joshii Boii" >Boii</li>
-			<li song="Drama.m4a" cover="tv_joshiiboii.jpg" artist="Joshii Boii">Drama</li>
-			<li song="64.mp3" cover="tv_joshiiboii.jpg" artist="Joshii Boii">Super Joshii 64</li>
-		</ul>
 	</div>
 
 </div>
@@ -55,7 +29,6 @@
 
 
 <br>
-<h3>search bar</h3>
 <h3>search window</h3>
 <br>
 <br>

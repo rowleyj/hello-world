@@ -1,25 +1,11 @@
-#audio-image{
-	position:relative;
-	overflow:hidden;
-	height:200px;
-	margin-bottom:15px;
-}
-
 #audio-info{
 	text-align:center;
 }
-
 #audio-info .artist{
 	font-weight:bold;
 }
-
-.cover{
-	width:100%;
-	z-index:1;
-}
-
 input#volume {
-	width:95%;
+	width:10%;
 	margin-left:2%;
     -webkit-appearance: none !important; /* use other appearance web devos ?*/
     background:#ccc;
@@ -29,51 +15,54 @@ input#volume {
 input#volume::-webkit-slider-thumb {
     -webkit-appearance: none !important;
     background:url(../images/mediaplayer/knob.png) no-repeat;
+		margin-top: 30px;
     height:12px;
     width:12px;
 }
 
 #buttons{
-	width:90%;
+	width:300px;
 	display: block;
-    margin: 15px auto;
-	margin-left:23px;
+    margin: 10px auto;
+	margin-left:10px;
 	overflow:auto;
+	float: left;
 }
-
 
 button#play{
 	width:70px;
 	height:70px;
-	background:url(../images/mediaplayer/play.png) no-repeat;float:left;
+	background:url(../images/mediaplayer/play-button.png) no-repeat;
+	border: aquamarine;
 }
 
 button#pause{
 	width:70px;
 	height:70px;
-	background:url(../images/mediaplayer/pause.png) no-repeat;float:left;
+	background:url(../images/mediaplayer/pause.png) no-repeat;
+	border: aquamarine;
+
 }
 
 button#prev{
 	width:70px;
 	height:70px;
 	background:url(../images/mediaplayer/prev.png) no-repeat;
-	float:left;
-	margin-top:15px;
+	border: aquamarine;
 }
 
 button#next{
 	width:70px;
 	height:70px;
 	background:url(../images/mediaplayer/next.png) no-repeat;
-	float:left;
-	margin-top:15px;
+	border: aquamarine;
 }
 
 
 #tracker{
 	position:relative;
-	width:100%;
+	width:40%;
+	float: left;
 }
 
 #playlist li.active {
