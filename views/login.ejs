@@ -1,5 +1,21 @@
 <% include partials/header %>
-<h1>login</h1>
-
-<h1>end of body</h1>
+<div class="login">
+  <div class="container-fluid">
+  <form>
+    <label>Username:</label>   <input type="textbox" value="Enter Username"
+    onfocus="if (this.value=='Enter Username') this.value='';"/>
+    <br>
+    <label>Password:</label>   <input type="textbox" value="Enter Password"
+    onfocus="if (this.value=='Enter Password') this.value='';"/>
+    <br>
+    <button type="submit">Enter Audiophiles</button>
+    <br>
+    <input type="checkbox" checked="checked"> Remember me?
+    <br>
+      <a>Forgot password?</a>
+      <a>Create Account</a>
+  </form>
+    </div>
+  </div>
+</div>
 <% include partials/footer %>
