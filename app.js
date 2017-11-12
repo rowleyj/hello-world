@@ -16,6 +16,7 @@ const Grid = require('gridfs-stream');
 const fs = require('fs');
   //end
 
+
 // where to find audio in FILESYSTEM that will be stored in db  ///////
 var audioPath = path.join(__dirname, '/music/drama.m4a'); //////
 //////////// will have to change to a variable set by the form ///////
@@ -26,24 +27,6 @@ Grid.mongo = mongoose.mongo;
 //Check DB connection
   db.once('open', function(){
     console.log('Connected To MongoDB');
-
-    //////////////////////////////////////  up
-    var gfs = Grid(db.db)
-
-    //when connection is open, create WRITE stream
-    var writeStream = gfs.createWriteStream({
-      //will be store in Mongo as 'Goodmorning'
-      filename: 'Drama'
-    });
-    //create a read-stream from where file currently is (audioPath)
-    // and pipe it into the database (using writeStream)
-    fs.createReadStream(audioPath).pipe(writeStream);
-
-    writeStream.on('close', function(file){
-      //do something with files
-      console.log(file.filename+' Written to DB');
-    });
-    ////////////////////////////////////////  up
   });
 
 //Check for DB Errors:
@@ -95,7 +78,7 @@ app.get('/signup', function(req, res){
     title: 'Sign Up For Audiophiles'
   });
 });
-  //tell the browser to get the / directory which takes to index file
+//tell the browser to get the / directory which takes to index file
 app.get('/',function (req, res){
   res.render('index', {
       title: 'Audiophiles',
@@ -133,9 +116,55 @@ app.get('/signup',function (req, res){
   });
 });
 
+
+app.post('/upload',function(req, res){
+  const gfs = Grid(db.db)
+
+  //form validation
+  req.checkBody('title', 'Title is Required').notEmpty();
+  req.checkBody('artist', 'Artist is Required').notEmpty();
+
+  //check for errors within form submission
+  var errors = req.validationErrors();
+
+  if(errors){
+    console.log('error experienced while attempting upload');
+    //rerend views
+    res.render('upload',{
+      title: 'AudioPhiles',
+      //include users?
+    });
+  }else{
+    //grab values of audio
+    var newSong = {
+      title: req.body.title,
+      artist: req.body.artist,
+      album: req.body.album
+    }
+    const writeStream = gfs.createWriteStream({
+      //will be store in Mongo as 'Drama'
+      filename: 'Drama'
+      });
+    //create a read-stream from where file currently is (audioPath)
+    // and pipe it into the database (using writeStream)
+    fs.createReadStream(audioPath).pipe(writeStream);
+
+    writeStream.on('close', function(file){
+      //do something with files
+      console.log(file.filename+' Written to DB');
+    });
+
+    //write audiofile and metadata(title,artist,and album to db)
+      }
+      res.redirect('/'); //send back to home
+    });
+
+
+
 //Add Router Routes
 let signup = require('./routes/signup');
 app.use('/signup', signup);
+
 
 //set app.js to port 8080
 app.listen(8080, function(){

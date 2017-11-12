@@ -12,8 +12,7 @@ const songSchema = mongoose.Schema({
   album: {
     type: String,
     required: true
-  }  //,
-  ////include filetype
+  } 
 });
 
-const User = module.exports = mongoose.model('Song', songSchema);
+const Song = module.exports = mongoose.model('Song', songSchema);
