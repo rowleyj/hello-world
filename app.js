@@ -1,7 +1,7 @@
 //require statements
 const express = require('express');
 const bodyParser = require('body-parser');
-const mongojs = require('mongojs'); //database scripting
+const mongojs = require('mongojs'); //database scripting ?dont need anymore?
 const mongoose = require('mongoose');
 const path = require('path');
 const expressValidator = require('express-validator')
@@ -9,10 +9,41 @@ const expressValidator = require('express-validator')
 //connect to DB
 mongoose.connect('mongodb://localhost/audiodb');
   let db = mongoose.connection;
+  //music upload addition
+// require Gridfs
+const Grid = require('gridfs-stream');
+// require filesystem module
+const fs = require('fs');
+  //end
+
+// where to find audio in FILESYSTEM that will be stored in db  ///////
+var audioPath = path.join(__dirname, '/music/drama.m4a'); //////
+//////////// will have to change to a variable set by the form ///////
+
+//connect Gridfs and MongoDB
+Grid.mongo = mongoose.mongo;
 
 //Check DB connection
   db.once('open', function(){
     console.log('Connected To MongoDB');
+
+    //////////////////////////////////////  up
+    var gfs = Grid(db.db)
+
+    //when connection is open, create WRITE stream
+    var writeStream = gfs.createWriteStream({
+      //will be store in Mongo as 'Goodmorning'
+      filename: 'Drama'
+    });
+    //create a read-stream from where file currently is (audioPath)
+    // and pipe it into the database (using writeStream)
+    fs.createReadStream(audioPath).pipe(writeStream);
+
+    writeStream.on('close', function(file){
+      //do something with files
+      console.log(file.filename+' Written to DB');
+    });
+    ////////////////////////////////////////  up
   });
 
 //Check for DB Errors:
