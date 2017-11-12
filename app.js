@@ -1,4 +1,4 @@
-  //require statements
+//require statements
 const express = require('express');
 const bodyParser = require('body-parser');
 const mongojs = require('mongojs'); //database scripting
@@ -7,7 +7,7 @@ const path = require('path');
 const expressValidator = require('express-validator')
 
 //connect to DB
-mongoose.connect('mongodb://localhost/audiophilesdb');
+mongoose.connect('mongodb://localhost/audiodb');
   let db = mongoose.connection;
 
 //Check DB connection
@@ -15,15 +15,14 @@ mongoose.connect('mongodb://localhost/audiophilesdb');
     console.log('Connected To MongoDB');
   });
 
-
 //Check for DB Errors:
   db.on('error',function(err){
     console.log(err);
   });
 
-  //set app to express
+//set app to express
 const app = express(); // set app to run express function
-
+//link router
 const router = express.Router();
 
 //View Engine
@@ -55,20 +54,16 @@ app.use(expressValidator({
   }
 }));
 
-<<<<<<< HEAD
-
 /////APP.GET STATEMENTS
-=======
 //Bring In Models
 let Article = require('./public/js/mongofizz');
 
 //Add Route
-app.get('/views/signup', function(req, res){
-  res.render('/signup', {
+app.get('/signup', function(req, res){
+  res.render('signup', {
     title: 'Sign Up For Audiophiles'
   });
 });
->>>>>>> 100bb01921f7329e2bb2bded0d627a57a035053a
   //tell the browser to get the / directory which takes to index file
 app.get('/',function (req, res){
   res.render('index', {
@@ -103,14 +98,15 @@ app.get('/signup',function (req, res){
       title: 'Sign Up For Audiophiles',
       articles: articles
     });
-    }
+  }
   });
 });
 
 //Add Router Routes
 let signup = require('./routes/signup');
 app.use('/signup', signup);
-  //set app.js to port 8080
+
+//set app.js to port 8080
 app.listen(8080, function(){
   console.log('Server Started on Port 8080...');
 });

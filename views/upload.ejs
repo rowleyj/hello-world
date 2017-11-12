@@ -3,12 +3,14 @@
   <div class="container-fluid">
     <div class="uploadForm">
       <h1>Upload Music</h1>
-      <form  action="index.html" method="post"> <!-- IDEA: HAVE TO CHANGE ALL THIS!!!!!! -->
-        <label>Song</label><input type="text" name="" value="">
+      <form  action="/upload" method="post"> <!-- IDEA: HAVE TO CHANGE ALL THIS!!!!!! -->
+        <label>Song</label><input type="text" name="title" >
         <br>
-        <label>Artist</label><input type="text" name="" value="">
+        <label>Artist</label><input type="text" name="artist" >
         <br>
-        <label>Album</label><input type="text" name="" value="">
+        <label>Album</label><input type="text" name="album" >
+        <br>
+        <input type="file" name="fileToUpload" id="fileToUpload">
         <br>
         <input type="submit" name="submit" value="submit">
       </form>

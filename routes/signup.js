@@ -13,15 +13,16 @@ router.get('/signup/:id', function(req, res){
   });
 });
 
+
 //Add Route
-router.get('/views/signup', function(req, res){
-  res.render('/signup', {
+router.get('/signup', function(req, res){
+  res.render('signup', {
     title: 'Sign Up For Audiophiles'
   });
 });
 
 //Add Submit POST Route
-router.post('/signup', function(req, res){
+router.post('/', function(req, res){
   const username = req.body.username;
   const firstName = req.body.firstName;
   const lastName = req.body.lastName;
@@ -37,7 +38,7 @@ router.post('/signup', function(req, res){
   req.checkBody('eMail', 'eMail is required.').notEmpty();
   req.checkBody('confirmEMail', 'Confirm eMail is required.').notEmpty();
   req.checkBody('password', 'password is required.').notEmpty();
-  req.checkBody('confirmPassword', 'Passwords do not match Jesse u dumb fuck').equals(req.body.password);
+  req.checkBody('confirmPassword', 'Passwords do not match').equals(req.body.password);
 //If Didn't Fill Out Field, Then Error:
   let errors = req.validationErrors();
 
@@ -71,4 +72,6 @@ router.post('/signup', function(req, res){
     });
   });
 }
+});
+
 module.exports = router;
