@@ -1,3 +1,4 @@
+/*and footer */
 header{
   background-color: aqua;
 }
@@ -12,10 +13,22 @@ body{
 li{
   color: black;
 }
+
+
+/*footer */
 footer{
   background-color: black;
-  height: 8%;
+  max-height: 8%;
+  margin-top: 8%;
 }
-h1#footer{
+.col-3{
+  width: 33%;
+  float: left;
+}
+.footerList{
+  text-align: center;
+  list-style-type: none;
+}
+.footerListItem{
   color: white;
 }

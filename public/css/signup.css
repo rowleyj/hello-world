@@ -5,7 +5,7 @@
     background: -moz-linear-gradient(aqua, yellow, purple); /* For Firefox 3.6 to 15 */
     background: linear-gradient(aqua,yellow, purple); /* Standard syntax */
 
-  height: 100%;
+  height: 92%; /*footer is 8%*/
 }
 .signupForm{
   margin-top: 5%;

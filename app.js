@@ -18,6 +18,8 @@ app.use(bodyParser.urlencoded({extended: false}));
   //set middleware for STATIC files (path)
 app.use(express.static(path.join(__dirname, 'public')))
 
+
+/////APP.GET STATEMENTS
   //tell the browser to get the / directory which takes to index file
 app.get('/',function (req, res){
   res.render('index',{
@@ -42,7 +44,7 @@ app.get('/login',function (req, res){
       title: 'Audiophiles',
     });
 });
-//include get signup ejs
+// get signup ejs
 app.get('/signup',function (req, res){
   res.render('signup',{
       title: 'Audiophiles',

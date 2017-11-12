@@ -1,3 +1,5 @@
+///rework to connect to audioid retrieved from db
+
 // thanks to Traversy Media & BrayTraversy @ https://github.com/bradtraversy/html5audioplayer for beginning of media player
 var audio;
 
