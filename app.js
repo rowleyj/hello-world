@@ -1,56 +1,45 @@
-//require statements
+/////////////////////////////// require statements  ///////////////////////////////
 const express = require('express');
 const bodyParser = require('body-parser');
 const mongojs = require('mongojs'); //database scripting ?dont need anymore?
 const mongoose = require('mongoose');
 const path = require('path');
 const expressValidator = require('express-validator')
+const Grid = require('gridfs-stream'); // require Gridfs
+const fs = require('fs'); // require filesystem module
+///////////////////////////////////////////////////////////////////////////////////
 
-//connect to DB
+/////////////////////////////// App Initialize ////////////////////////////////////
+const app = express(); // set app to run express function
+const router = express.Router(); //link router
+/*  View Engine - Embedded Javascript(.EJS) */
+app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, 'views')); //set path to views
+///////////////////////////////////////////////////////////////////////////////////
+
+/////////////////////////////// Database Initialize ///////////////////////////////
+Grid.mongo = mongoose.mongo; //set Gridfs to use mongoose
+/*  connection  */
 mongoose.connect('mongodb://localhost/audiodb');
   let db = mongoose.connection;
-  //music upload addition
-// require Gridfs
-const Grid = require('gridfs-stream');
-// require filesystem module
-const fs = require('fs');
-  //end
-
-
-// where to find audio in FILESYSTEM that will be stored in db  ///////
-var audioPath = path.join(__dirname, '/music/drama.m4a'); //////
-//////////// will have to change to a variable set by the form ///////
-
-//connect Gridfs and MongoDB
-Grid.mongo = mongoose.mongo;
-
-//Check DB connection
+/* test connection */
   db.once('open', function(){
     console.log('Connected To MongoDB');
   });
-
-//Check for DB Errors:
   db.on('error',function(err){
     console.log(err);
   });
+///////////////////////////////////////////////////////////////////////////////////
 
-//set app to express
-const app = express(); // set app to run express function
-//link router
-const router = express.Router();
-
-//View Engine
-app.set('view engine', 'ejs');
-app.set('views', path.join(__dirname, 'views')); //set path to views
-
-// body-parser middleware
+/////////////////////////////////// MiddleWare ///////////////////////////////////
+/* body-parser middleware */
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
 
-//set middleware for STATIC files (path)
+/* static file pathway (js,images,css)  */
 app.use(express.static(path.join(__dirname, 'public')));
 
-//Validator middleware
+/* Validator Middleware */
 app.use(expressValidator({
   errorFormatter: function(param, msg, value) {
     var namespace = param.split('.')
@@ -67,42 +56,40 @@ app.use(expressValidator({
   };
   }
 }));
+///////////////////////////////////////////////////////////////////////////////////
 
-/////APP.GET STATEMENTS
-//Bring In Models
-let Article = require('./public/js/mongofizz');
+//////Bring In Models ?????????????????????????????? rename article something descriptive?
+let Article = require('./public/js/mongofizz'); /// ???????????????
+/// ?????????????????????????????????????????????
 
-//Add Route
-app.get('/signup', function(req, res){
-  res.render('signup', {
-    title: 'Sign Up For Audiophiles'
-  });
-});
-//tell the browser to get the / directory which takes to index file
+///////////////////////////////////////////////////////////////////////////////////
+
+////////////////////////////////  EJS View Routes /////////////////////////////////
+/* index  */
 app.get('/',function (req, res){
   res.render('index', {
       title: 'Audiophiles',
   });
 });
-//get browse ejs
+/*  browse ejs  */
 app.get('/browse',function (req, res){
   res.render('browse',{
       title: 'Audiophiles',
     });
 });
-// get upload ejs
+/*  upload ejs  */
 app.get('/upload',function (req, res){
   res.render('upload',{
       title: 'Audiophiles',
     });
 });
-// get login ejs
+/*  login ejs */
 app.get('/login',function (req, res){
   res.render('login',{
       title: 'Audiophiles',
     });
 });
-// get signup ejs
+/* get signup ejs */ // IDEA: i got rid of other app.get for signup
 app.get('/signup',function (req, res){
   Article.find({},function(err, articles){
     if(err){
@@ -115,11 +102,13 @@ app.get('/signup',function (req, res){
   }
   });
 });
+///////////////////////////////////////////////////////////////////////////////////
 
-
+///////////////////////////////  POST METHOD //////////////////////////////////////
+/* upload */
 app.post('/upload',function(req, res){
-  const gfs = Grid(db.db)
 
+  const gfs = Grid(db.db) // set gfs to grid function of db
   //form validation
   req.checkBody('title', 'Title is Required').notEmpty();
   req.checkBody('artist', 'Artist is Required').notEmpty();
@@ -129,22 +118,12 @@ app.post('/upload',function(req, res){
 
   if(errors){
     console.log('error experienced while attempting upload');
-    //rerend views
+    /* rerender upload view */
     res.render('upload',{
       title: 'AudioPhiles',
-      //include users?
     });
   }else{
-    //grab values of audio
-    /*var newSong = {
-      filename: req.files.fileToUpload,
-      title: req.body.title,
-      artist: req.body.artist,
-      album: req.body.album
-    }
-    */
     const writeStream = gfs.createWriteStream({
-      //will be store in Mongo as 'Drama'
       filename: req.body.fileToUpload,
       metadata:{
         title: req.body.title,
@@ -152,28 +131,25 @@ app.post('/upload',function(req, res){
         album: req.body.album
       }
       });
-    //create a read-stream from where file currently is (audioPath)
-    // and pipe it into the database (using writeStream)
-    fs.createReadStream(audioPath).pipe(writeStream);
-
+    //write audiofile and metadata(title,artist,and album to db)
+    req.pipe(writeStream);
+    /* check if stream closes */
     writeStream.on('close', function(file){
       //do something with files
       console.log(file.filename+' Written to DB');
     });
-
-    //write audiofile and metadata(title,artist,and album to db)
       }
       res.redirect('/'); //send back to home
     });
-
-
+///////////////////////////////////////////////////////////////////////////////////
 
 //Add Router Routes
 let signup = require('./routes/signup');
 app.use('/signup', signup);
 
 
-//set app.js to port 8080
+///////////////////////////// Localhost Port /////////////////////////////////////
 app.listen(8080, function(){
   console.log('Server Started on Port 8080...');
 });
+///////////////////////////////////////////////////////////////////////////////////
