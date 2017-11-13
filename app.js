@@ -136,14 +136,21 @@ app.post('/upload',function(req, res){
     });
   }else{
     //grab values of audio
-    var newSong = {
+    /*var newSong = {
+      filename: req.files.fileToUpload,
       title: req.body.title,
       artist: req.body.artist,
       album: req.body.album
     }
+    */
     const writeStream = gfs.createWriteStream({
       //will be store in Mongo as 'Drama'
-      filename: 'Drama'
+      filename: req.body.fileToUpload,
+      metadata:{
+        title: req.body.title,
+        artist: req.body.artist,
+        album: req.body.album
+      }
       });
     //create a read-stream from where file currently is (audioPath)
     // and pipe it into the database (using writeStream)
