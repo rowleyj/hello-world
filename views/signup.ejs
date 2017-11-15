@@ -1,52 +1,33 @@
 <% include partials/header %>
-
-<div id = "container">
-    <form method="post" action="/signup">
+<div id = "container-fluid">
+  <div>
+    <form method="post" action="/signup"> <!--/signup is where you are sending post request -->
       <div id=form-group>
-          <label>Username:</label>
-           <div>
-             <input type="text" class="form-control" name="username">
-           </div>
+          <label>Username:</label><input type="text" class="form-control" name="username">
       </div>
        <div id=form-group>
            <label>First Name:</label>
-            <div>
               <input type="text" class="form-control" name="firstName">
-            </div>
        </div>
      <div id=form-group>
-         <label>Last Name:</label>
-          <div>  <input type="text" class="form-control" name="lastName">
-          </div>
+         <label>Last Name:</label><input type="text" class="form-control" name="lastName">
      </div>
      <div id=form-group>
-         <label>E-Mail:</label>
-          <div>
-            <input type="text" class="form-control" name="eMail">
-          </div>
+         <label>E-Mail:</label><input type="text" class="form-control" name="eMail">
      </div>
      <div id=form-group>
-         <label>Confirm E-Mail:</label>
-          <div>
-            <input type="text" class="form-control" name="confirmEMail">
-          </div>
+         <label>Confirm E-Mail:</label><input type="text" class="form-control" name="confirmEMail">
      </div>
      <div id=form-group>
-         <label>Password:</label>
-          <div>
-            <input type="password" class="form-control" name="password">
-          </div>
+         <label>Password:</label><input type="password" class="form-control" name="password">
      </div>
      <div id=form-group>
          <label>Confirm Password:</label>
-          <div>
             <input type="password" class="form-control" name="confirmPassword">
-          </div>
      </div>
-
-    <div>
-      <button type="submit">Sign Up!</button>
-    </div>
+     <div>
+         <button class="btn" type="submit" >Sign Up!</button>
+       </div>
 </form>
 </div>
 

@@ -1,21 +1,17 @@
 <% include partials/header %>
-<div class="login">
-  <div class="container-fluid">
-  <form>
-    <label>Username:</label>   <input type="textbox" value="Enter Username"
-    onfocus="if (this.value=='Enter Username') this.value='';"/>
-    <br>
-    <label>Password:</label>   <input type="textbox" value="Enter Password"
-    onfocus="if (this.value=='Enter Password') this.value='';"/>
-    <br>
-    <button type="submit">Enter Audiophiles</button>
-    <br>
-    <input type="checkbox" checked="checked"> Remember me?
-    <br>
-      <a>Forgot password?</a>
-      <a>Create Account</a>
-  </form>
-    </div>
+<div id = "container-fluid">
+  <div>
+<form method="post" action="/login"> <!--/signup is where you are sending post request -->
+  <div id=form-group>
+      <label>Username:</label><input type="text" class="form-control" name="username">
+  </div>
+  <div id=form-group>
+      <label>Password:</label><input type="text" class="form-control" name="password">
+  </div>
+    <button type="submit" class="btn.btn-primary">Submit</button>
+</form>
   </div>
 </div>
+
+
 <% include partials/footer %>

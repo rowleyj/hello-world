@@ -4,14 +4,23 @@ const bodyParser = require('body-parser');
 const mongojs = require('mongojs'); //database scripting ?dont need anymore?
 const mongoose = require('mongoose');
 const path = require('path');
-const expressValidator = require('express-validator')
+
+//Signup:
+const bcrypt = require('bcryptjs');
+const expressValidator = require('express-validator');
+
+//Upload:
 const Grid = require('gridfs-stream'); // require Gridfs
 const fs = require('fs'); // require filesystem module
+
+//Login:
+const config = require('./config/database');
+const passport = require('passport');
+
 ///////////////////////////////////////////////////////////////////////////////////
 
 /////////////////////////////// App Initialize ////////////////////////////////////
 const app = express(); // set app to run express function
-const router = express.Router(); //link router
 /*  View Engine - Embedded Javascript(.EJS) */
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views')); //set path to views
@@ -20,7 +29,7 @@ app.set('views', path.join(__dirname, 'views')); //set path to views
 /////////////////////////////// Database Initialize ///////////////////////////////
 Grid.mongo = mongoose.mongo; //set Gridfs to use mongoose
 /*  connection  */
-mongoose.connect('mongodb://localhost/audiodb');
+mongoose.connect(config.database);
   let db = mongoose.connection;
 /* test connection */
   db.once('open', function(){
@@ -30,7 +39,6 @@ mongoose.connect('mongodb://localhost/audiodb');
     console.log(err);
   });
 ///////////////////////////////////////////////////////////////////////////////////
-
 /////////////////////////////////// MiddleWare ///////////////////////////////////
 /* body-parser middleware */
 app.use(bodyParser.json());
@@ -56,13 +64,19 @@ app.use(expressValidator({
   };
   }
 }));
-///////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////Passport MiddleWare/////////////////////////////////////
+require('./config/passport')(passport);
 
-//////Bring In Models ?????????????????????????????? rename article something descriptive?
-let Article = require('./public/js/mongofizz'); /// ???????????????
-/// ?????????????????????????????????????????????
+app.use(passport.initialize());
+app.use(passport.session());
+//IDEA: WHEN WE HAVE USERS, IN OUR CSS WE CAN SET IT TO SEE LOGIN IF LOGGED OUT AND LOGOUT IF LOGGED IN
+//That is why I have code commented below (Travery Media Ep 10 18mins or so)
 
-///////////////////////////////////////////////////////////////////////////////////
+app.get('*', function(req, res, next){
+  res.locals.user = req.user || null;
+  next();
+});
 
 ////////////////////////////////  EJS View Routes /////////////////////////////////
 /* index  */
@@ -89,22 +103,15 @@ app.get('/login',function (req, res){
       title: 'Audiophiles',
     });
 });
-/* get signup ejs */ // IDEA: i got rid of other app.get for signup
 app.get('/signup',function (req, res){
-  Article.find({},function(err, articles){
-    if(err){
-      console.log(err);
-    } else {
     res.render('signup', {
-      title: 'Sign Up For Audiophiles',
-      articles: articles
+      title: 'AudioPhiles'
     });
-  }
   });
-});
+
 ///////////////////////////////////////////////////////////////////////////////////
 
-///////////////////////////////  POST METHOD //////////////////////////////////////
+///////////////////////////////  UPLOAD POST METHOD //////////////////////////////////////
 /* upload */
 app.post('/upload',function(req, res){
 
@@ -142,11 +149,68 @@ app.post('/upload',function(req, res){
       res.redirect('/'); //send back to home
     });
 ///////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////Sign-Up POST//////////////////////////////////////////
+  const User = require('./public/js/mongofizz'); //Needed model
+app.post('/signup', function(req, res){
+  const username = req.body.username;
+  const firstName = req.body.firstName;
+  const lastName = req.body.lastName;
+  const eMail = req.body.eMail;
+  const confirmEMail = req.body.confirmEMail;
+  const password = req.body.password;
+  const confirmPassword = req.body.confirmPassword;
 
-//Add Router Routes
-let signup = require('./routes/signup');
-app.use('/signup', signup);
+  req.checkBody('username', 'Username is required.').notEmpty();
+  req.checkBody('firstName', 'First name is required.').notEmpty();
+  req.checkBody('lastName', 'Last name is required.').notEmpty();
+  req.checkBody('eMail', 'eMail is not valid.').isEmail();
+  req.checkBody('eMail', 'eMail is required.').notEmpty();
+  req.checkBody('confirmEMail', 'Confirm eMail is required.').notEmpty();
+  req.checkBody('password', 'password is required.').notEmpty();
+  req.checkBody('confirmPassword', 'Passwords do not match').equals(req.body.password);
 
+  let errors = req.validationErrors();
+//If unsuccessful
+    if(errors){
+      console.log('Sign-Up was unsuccessful');
+      res.render('signup', {
+        title: 'AudioPhiles'
+      });
+    } else {
+      let newUser = new User({
+        username: username,
+        firstName: firstName,
+        lastName: lastName,
+        eMail: eMail,
+        password: password
+      });//If successful
+//Generate salt to hide password
+        bcrypt.genSalt(8, function(err, salt){
+        bcrypt.hash(newUser.password, salt, function(err, hash){
+          if(err){
+            console.log(err);
+          }
+      newUser.password=hash;
+      newUser.save(function(err){
+        if(err){
+          console.log(err);
+          return;
+        } else {
+          res.redirect('/login')
+        }//Redirect to login if successful
+      });
+    });
+  });
+}
+});
+///////////////////////////// Login Process /////////////////////////////////////
+app.post('/login', function(req, res, next){
+  passport.authenticate('local', {
+    successRedirect: '/',
+    failureRedirect: '/login',
+    failureFlash: false
+  })(req, res, next);
+});
 
 ///////////////////////////// Localhost Port /////////////////////////////////////
 app.listen(8080, function(){
