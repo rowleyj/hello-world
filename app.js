@@ -13,9 +13,13 @@ const expressValidator = require('express-validator');
 const Grid = require('gridfs-stream'); // require Gridfs
 const fs = require('fs'); // require filesystem module
 
+
 //Login:
 const config = require('./config/database');
 const passport = require('passport');
+
+//Browse:
+
 
 ///////////////////////////////////////////////////////////////////////////////////
 
@@ -85,12 +89,18 @@ app.get('/',function (req, res){
       title: 'Audiophiles',
   });
 });
+
 /*  browse ejs  */
 app.get('/browse',function (req, res){
+ /* access song files, assign to docs */
+ db.collection('fs.files').find(function (err, docs){
+    // console.log(docs); ---> read out database to console
   res.render('browse',{
-      title: 'Audiophiles',
+      songs: docs
     });
+  })
 });
+
 /*  upload ejs  */
 app.get('/upload',function (req, res){
   res.render('upload',{
@@ -113,12 +123,14 @@ app.get('/signup',function (req, res){
 
 ///////////////////////////////  UPLOAD POST METHOD //////////////////////////////////////
 /* upload */
+const Song = require('./public/js/songUpload'); //needed model
 app.post('/upload',function(req, res){
 
   const gfs = Grid(db.db) // set gfs to grid function of db
   //form validation
   req.checkBody('title', 'Title is Required').notEmpty();
   req.checkBody('artist', 'Artist is Required').notEmpty();
+
 
   //check for errors within form submission
   var errors = req.validationErrors();
@@ -130,25 +142,29 @@ app.post('/upload',function(req, res){
       title: 'AudioPhiles',
     });
   }else{
-    const writeStream = gfs.createWriteStream({
+    let newSong = new Song({
       filename: req.body.fileToUpload,
       metadata:{
         title: req.body.title,
         artist: req.body.artist,
         album: req.body.album
       }
-      });
-    //write audiofile and metadata(title,artist,and album to db)
-    req.pipe(writeStream);
-    /* check if stream closes */
-    writeStream.on('close', function(file){
-      //do something with files
-      console.log(file.filename+' Written to DB');
     });
+    /* create write stream "songUp" */
+    const songUp = gfs.createWriteStream(newSong);
+    //write audiofile and metadata(title,artist,and album to db)
+    req.pipe(songUp);
+
+    /* check if stream closes */
+    songUp.on('close', function(file){
+      //do something with files
+    console.log(file.filename+' Written to DB');
+     });
       }
       res.redirect('/'); //send back to home
     });
 ///////////////////////////////////////////////////////////////////////////////////
+
 //////////////////////////////Sign-Up POST//////////////////////////////////////////
   const User = require('./public/js/mongofizz'); //Needed model
 app.post('/signup', function(req, res){

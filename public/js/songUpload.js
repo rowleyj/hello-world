@@ -1,10 +1,10 @@
 const mongoose = require('mongoose');
 
 const songSchema = mongoose.Schema({
-  _id: ObjectId(...),
-  filename: String,
-  uploadDate: ISODate(...),
-  contentType: 'audio/mp3',
+  filename: {
+    type: String,
+    required: true,
+  },
   metadata:{
     title: {
       type: String,
@@ -16,9 +16,8 @@ const songSchema = mongoose.Schema({
           },
     album: {
       type: String,
-      required: true
           },
-    tags: [...],
+    tags: [],
 }
 });
 

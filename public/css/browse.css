@@ -16,3 +16,13 @@
 
   height: 92%; /*footer is 8%*/
 }
+/* temporary */
+ul{
+  color: black;
+  font-size: 20;
+  font-weight: bold;
+}
+li{
+  color: black;
+  font-size: 20;
+}

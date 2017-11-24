@@ -1,6 +1,6 @@
 <% include partials/header %>
 <div class="browse">
-	
+
 <div id="container-fluid">
 	<div id="audio-image"> <!-- ALBUM COVER -->
 		<img class="cover" />
@@ -18,13 +18,16 @@
 <br>
 <div class="container-fluid" >
 	<div class="library">
-			<a href="#"> SONG 1</a> <br>		<!-- IDEA: add db-link to songid to call the play function when clicked -->
-			<a href="#"> SONG 2</a> <br>  	<!-- IDEA: add sort functions -->
-			<a href="#"> SONG 3</a> <br>		<!-- IDEA: add search ability -->
-			<a href="#"> SONG 4</a> <br>
-			<a href="#"> SONG 5</a> <br>
-			<a href="#"> SONG 6</a> <br>
-			<a href="#"> SONG 7</a> <br>
+		<ul>
+		<% songs.forEach(function(song){ %>
+        <li><%= song.filename %>
+					</li>
+					<% }) %>
+				<!-- IDEA: add db-link to songid to call the play function when clicked -->
+			 	<!-- IDEA: add sort functions -->
+				<!-- IDEA: add search ability -->
+
+			</ul>
 
 
 	</div>
