@@ -1,6 +1,6 @@
-const mongoose = require('mongoose');
+let mongoose = require('mongoose');
 
-const songSchema = mongoose.Schema({
+let songSchema = mongoose.Schema({
   filename: {
     type: String,
     required: true,
@@ -21,4 +21,4 @@ const songSchema = mongoose.Schema({
 }
 });
 
-const Song = module.exports = mongoose.model('Song', songSchema);
+var Song = module.exports = mongoose.model('Song', songSchema ); //'fs.files'

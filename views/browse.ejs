@@ -18,11 +18,16 @@
 <br>
 <div class="container-fluid" >
 	<div class="library">
+		  <h5><%= title %></h5>
 		<ul>
-		<% songs.forEach(function(song){ %>
+			<% songs.forEach(function(song) { %>
         <li><%= song.filename %>
-					</li>
-					<% }) %>
+			 </li>
+
+    <% }); %>
+
+
+
 				<!-- IDEA: add db-link to songid to call the play function when clicked -->
 			 	<!-- IDEA: add sort functions -->
 				<!-- IDEA: add search ability -->

@@ -13,12 +13,15 @@ const expressValidator = require('express-validator');
 const Grid = require('gridfs-stream'); // require Gridfs
 const fs = require('fs'); // require filesystem module
 
-
 //Login:
 const config = require('./config/database');
 const passport = require('passport');
 
 //Browse:
+
+
+//Models
+const Song = require('./public/js/songUpload'); //needed model
 
 
 ///////////////////////////////////////////////////////////////////////////////////
@@ -31,9 +34,10 @@ app.set('views', path.join(__dirname, 'views')); //set path to views
 ///////////////////////////////////////////////////////////////////////////////////
 
 /////////////////////////////// Database Initialize ///////////////////////////////
-Grid.mongo = mongoose.mongo; //set Gridfs to use mongoose
+
 /*  connection  */
 mongoose.connect(config.database);
+Grid.mongo = mongoose.mongo; //set Gridfs to use mongoose
   let db = mongoose.connection;
 /* test connection */
   db.once('open', function(){
@@ -43,6 +47,8 @@ mongoose.connect(config.database);
     console.log(err);
   });
 ///////////////////////////////////////////////////////////////////////////////////
+
+const gfs = Grid(db) // set gfs to fs.files
 /////////////////////////////////// MiddleWare ///////////////////////////////////
 /* body-parser middleware */
 app.use(bodyParser.json());
@@ -93,12 +99,18 @@ app.get('/',function (req, res){
 /*  browse ejs  */
 app.get('/browse',function (req, res){
  /* access song files, assign to docs */
- db.collection('fs.files').find(function (err, docs){
-    // console.log(docs); ---> read out database to console
-  res.render('browse',{
-      songs: docs
-    });
-  })
+ Song.find({}, function(err, songs){
+   if(err){
+     console.log(err);
+   }else{
+     console.log(songs);
+
+   res.render('browse',{
+        title: "Your Library",
+       songs: songs
+     });
+ }
+})
 });
 
 /*  upload ejs  */
@@ -123,10 +135,10 @@ app.get('/signup',function (req, res){
 
 ///////////////////////////////  UPLOAD POST METHOD //////////////////////////////////////
 /* upload */
-const Song = require('./public/js/songUpload'); //needed model
+
 app.post('/upload',function(req, res){
 
-  const gfs = Grid(db.db) // set gfs to grid function of db
+
   //form validation
   req.checkBody('title', 'Title is Required').notEmpty();
   req.checkBody('artist', 'Artist is Required').notEmpty();
@@ -151,7 +163,7 @@ app.post('/upload',function(req, res){
       }
     });
     /* create write stream "songUp" */
-    const songUp = gfs.createWriteStream(newSong);
+    var songUp = gfs.createWriteStream(newSong);
     //write audiofile and metadata(title,artist,and album to db)
     req.pipe(songUp);
 
