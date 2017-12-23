@@ -36,20 +36,22 @@
 					</div>
 
 			</div>
-			<% songs.forEach(function(song) { %>
-				<div class="row">
-					<div class="col-3">
-						<li><%= song.metadata.title %> </li>
-					</div>
-	        <div class="col-3">
-	        	<li><%= song.metadata.artist %> <li>
-	        </div>
-						<div class="col-3">
-							<li> <%= song.metadata.album %>  </li>
-						</div>
-				</div>
 
-    <% }); %>
+				<% songs.forEach(function(song) { %>
+					<div class="row">
+						<div class="col-3">
+							<button id="titlePlay-button" > <%= song.metadata.title %> </button>
+						</div>
+		        <div class="col-3">
+		        	<button ><%= song.metadata.artist %> </button>
+		        </div>
+							<div class="col-3">
+								<button> <%= song.metadata.album %>  </button>
+							</div>
+					</div>
+
+	    <% }); %>
+
 
 
 

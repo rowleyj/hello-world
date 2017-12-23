@@ -101,7 +101,7 @@ app.get('/browse',function (req, res){
  var filesColl = db.collection('fs.files');
  var filesQuery = filesColl.find({});
  filesQuery.toArray(function(error, docs) {
-   console.log(docs);
+   //console.log(docs);
    res.render('browse',{
         title: "Your Library",
        songs: docs
@@ -128,6 +128,13 @@ app.get('/signup',function (req, res){
   });
 
 ///////////////////////////////////////////////////////////////////////////////////
+
+/* play */
+
+app.post('/browse', function (req, res) {
+  console.log('Song title clicked.');
+  //
+});
 
 ///////////////////////////////  UPLOAD POST METHOD //////////////////////////////////////
 /* upload */
