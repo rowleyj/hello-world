@@ -207,8 +207,6 @@ app.get('/flash', function(req, res){
 });
 
   const User = require('./models/user.js'); //Needed model
-=======
->>>>>>> 7ad9fce05d4b4caa539dfaccde75fb7162688a3a
 app.post('/signup', function(req, res){
   const firstName = req.body.firstName;
   const lastName = req.body.lastName;
