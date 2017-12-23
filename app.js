@@ -7,6 +7,7 @@ const path = require('path');
 
 //Signup:
 const expressValidator = require('express-validator');
+const User = require('./public/js/mongofizz');
 
 //Upload:
 const Grid = require('gridfs-stream'); // require Gridfs
@@ -14,6 +15,7 @@ const fs = require('fs'); // require filesystem module
 
 //Login:
 const passport = require('passport');
+<<<<<<< HEAD
 var port = process.env.PORT || 8080;
 var flash = require('connect-flash');
 var morgan = require('morgan');
@@ -21,6 +23,10 @@ var cookieParser = require('cookie-parser');
 var session = require('express-session');
 var config = require('./config/database.js');
 const bcrypt = require('bcryptjs');
+=======
+const LocalStrategy = require('passport-local').Strategy;
+
+>>>>>>> 7ad9fce05d4b4caa539dfaccde75fb7162688a3a
 //Browse:
 
 
@@ -28,7 +34,6 @@ const bcrypt = require('bcryptjs');
 const Song = require('./public/js/songUpload'); //needed model
 
 ///////////////////////////////////////////////////////////////////////////////////
-
 /////////////////////////////// App Initialize ////////////////////////////////////
 const app = express(); // set app to run express function
 //LOGIN PART 1
@@ -99,8 +104,6 @@ app.use(expressValidator({
 }));
 /////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////Passport MiddleWare/////////////////////////////////////
-require('./config/passport')(passport);
-
 app.use(passport.initialize());
 app.use(passport.session());
 //IDEA: WHEN WE HAVE USERS, IN OUR CSS WE CAN SET IT TO SEE LOGIN IF LOGGED OUT AND LOGOUT IF LOGGED IN
@@ -125,7 +128,7 @@ app.get('/browse',function (req, res){
  var filesColl = db.collection('fs.files');
  var filesQuery = filesColl.find({});
  filesQuery.toArray(function(error, docs) {
-   console.log(docs);
+   //console.log(docs);
    res.render('browse',{
         title: "Your Library",
        songs: docs
@@ -196,6 +199,7 @@ app.post('/upload',function(req, res){
 ///////////////////////////////////////////////////////////////////////////////////
 
 //////////////////////////////Sign-Up POST//////////////////////////////////////////
+<<<<<<< HEAD
 app.get('/flash', function(req, res){
   // Set a flash message by passing the key, followed by the value, to req.flash().
   req.flash('info', 'Flash is back!')
@@ -203,6 +207,8 @@ app.get('/flash', function(req, res){
 });
 
   const User = require('./models/user.js'); //Needed model
+=======
+>>>>>>> 7ad9fce05d4b4caa539dfaccde75fb7162688a3a
 app.post('/signup', function(req, res){
   const firstName = req.body.firstName;
   const lastName = req.body.lastName;
@@ -252,15 +258,45 @@ app.post('/signup', function(req, res){
   });
 }
 });
-///////////////////////////// Login Process /////////////////////////////////////
+///////////////////////////// Login Process /////////////////////////////////////IDEA:IDEA:IDEA:IDEA:IDEA:
 app.post('/login', function(req, res, next){
   passport.authenticate('local', {
     successRedirect: '/',
     failureRedirect: '/login',
-    failureFlash: false
-  })(req, res, next);
+    failureFlash: true })(req, res, next);
 });
 
+module.exports = function(passport){
+  //Implement Local Strategy (Through MongoDB)
+  passport.use(new LocalStrategy(function(username, password, done){
+    //Match username
+    let query = {username:username};
+    User.findOne(query, function(err, user){
+      if(err) throw err;
+      if(!user){
+        return done(null, false, {message: 'No user found'});
+      }
+    //Match password
+    bcrypt.compare(password, users.password, function(err, isMatch){
+      if(err) throw err;
+      if(isMatch){
+        return done(null, user);
+      } else {
+        return done(null, false, {message: 'Password is incorrect!'});
+      }
+    });
+    });
+  }));
+  passport.serializeUser(function(user, done){
+    done(null, user.id);
+  });
+
+  passport.deserializeUser(function(id, done){
+    User.findById(id, function(err, user){
+        done(err, user);
+});
+});
+}
 ///////////////////////////// Localhost Port /////////////////////////////////////
 app.listen(8080, function(){
   console.log('Server Started on Port 8080...');
