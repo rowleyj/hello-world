@@ -18,11 +18,36 @@
 <br>
 <div class="container-fluid" >
 	<div class="library">
-		  <h5><%= title %></h5>
-		<ul>
+		  <h3><%= title %></h3>
+		<ul style="list-style-type: none">
+			<div class="row">
+				<div class="col-3">
+					<li>Title</li>
+				</div>
+				<div class="col-3">
+					<li>Artist<li>
+				</div>
+					<div class="col-3">
+						<li>Album</li>
+					</div>
+					<div class="row">
+						<br> <!-- for temporary styling !-->
+						<br> <!-- for temporary styling !-->
+					</div>
+
+			</div>
 			<% songs.forEach(function(song) { %>
-        <li><%= song.filename %>
-			 </li>
+				<div class="row">
+					<div class="col-3">
+						<li><%= song.metadata.title %> </li>
+					</div>
+	        <div class="col-3">
+	        	<li><%= song.metadata.artist %> <li>
+	        </div>
+						<div class="col-3">
+							<li> <%= song.metadata.album %>  </li>
+						</div>
+				</div>
 
     <% }); %>
 

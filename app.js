@@ -23,7 +23,6 @@ const passport = require('passport');
 //Models
 const Song = require('./public/js/songUpload'); //needed model
 
-
 ///////////////////////////////////////////////////////////////////////////////////
 
 /////////////////////////////// App Initialize ////////////////////////////////////
@@ -48,7 +47,7 @@ Grid.mongo = mongoose.mongo; //set Gridfs to use mongoose
   });
 ///////////////////////////////////////////////////////////////////////////////////
 
-const gfs = Grid(db) // set gfs to fs.files
+const gfs = Grid(db.db) // set gfs to fs.files
 /////////////////////////////////// MiddleWare ///////////////////////////////////
 /* body-parser middleware */
 app.use(bodyParser.json());
@@ -102,7 +101,7 @@ app.get('/browse',function (req, res){
  var filesColl = db.collection('fs.files');
  var filesQuery = filesColl.find({});
  filesQuery.toArray(function(error, docs) {
-
+   console.log(docs);
    res.render('browse',{
         title: "Your Library",
        songs: docs
@@ -135,11 +134,10 @@ app.get('/signup',function (req, res){
 
 app.post('/upload',function(req, res){
 
-
   //form validation
   req.checkBody('title', 'Title is Required').notEmpty();
   req.checkBody('artist', 'Artist is Required').notEmpty();
-
+  var filename = req.body.fileToUpload;
 
   //check for errors within form submission
   var errors = req.validationErrors();
@@ -163,7 +161,6 @@ app.post('/upload',function(req, res){
     var songUp = gfs.createWriteStream(newSong);
     //write audiofile and metadata(title,artist,and album to db)
     req.pipe(songUp);
-
     /* check if stream closes */
     songUp.on('close', function(file){
       //do something with files

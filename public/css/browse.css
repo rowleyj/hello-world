@@ -26,3 +26,9 @@ li{
   color: black;
   font-size: 20;
 }
+div.col-3{
+  width:30%;
+}
+div.row{
+  width:100%;
+}
