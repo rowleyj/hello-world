@@ -6,7 +6,6 @@ const mongoose = require('mongoose');
 const path = require('path');
 
 //Signup:
-const bcrypt = require('bcryptjs');
 const expressValidator = require('express-validator');
 
 //Upload:
@@ -14,9 +13,14 @@ const Grid = require('gridfs-stream'); // require Gridfs
 const fs = require('fs'); // require filesystem module
 
 //Login:
-const config = require('./config/database');
 const passport = require('passport');
-
+var port = process.env.PORT || 8080;
+var flash = require('connect-flash');
+var morgan = require('morgan');
+var cookieParser = require('cookie-parser');
+var session = require('express-session');
+var config = require('./config/database.js');
+const bcrypt = require('bcryptjs');
 //Browse:
 
 
@@ -27,13 +31,33 @@ const Song = require('./public/js/songUpload'); //needed model
 
 /////////////////////////////// App Initialize ////////////////////////////////////
 const app = express(); // set app to run express function
+//LOGIN PART 1
+  //config
+mongoose.connect(config.url); //Connect to DB
+require('./config/passport')(passport); //pass passport for configuration
+
+  //setup expres
+      app.use(morgan('dev')); //log every request to the console
+      app.use(cookieParser()); //read cookies (needed for authentification)
+      app.use(bodyParser()); //get info from html forms
+//end login PART 1
+
+
 /*  View Engine - Embedded Javascript(.EJS) */
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views')); //set path to views
 ///////////////////////////////////////////////////////////////////////////////////
+//LOGIN SHIT TO BE MOVED, DEC 23 SHIIIIIIT
+  //passport requirements
+  app.use(session({secret: 'jesseeatsdogdong' })); //session secret?
+  app.use(passport.initialize());
+  app.use(passport.session()); //persistent login sessions
+  app.use(flash()); //use flash for flash messages for failed attempts
+
+  //routes
+  require('./models/routes.js')(app, passport);//load routes and pass in app/configured passport
 
 /////////////////////////////// Database Initialize ///////////////////////////////
-
 /*  connection  */
 mongoose.connect(config.database);
 Grid.mongo = mongoose.mongo; //set Gridfs to use mongoose
@@ -45,8 +69,8 @@ Grid.mongo = mongoose.mongo; //set Gridfs to use mongoose
   db.on('error',function(err){
     console.log(err);
   });
-///////////////////////////////////////////////////////////////////////////////////
 
+///////////////////////////////////////////////////////////////////////////////////
 const gfs = Grid(db.db) // set gfs to fs.files
 /////////////////////////////////// MiddleWare ///////////////////////////////////
 /* body-parser middleware */
@@ -172,9 +196,14 @@ app.post('/upload',function(req, res){
 ///////////////////////////////////////////////////////////////////////////////////
 
 //////////////////////////////Sign-Up POST//////////////////////////////////////////
-  const User = require('./public/js/mongofizz'); //Needed model
+app.get('/flash', function(req, res){
+  // Set a flash message by passing the key, followed by the value, to req.flash().
+  req.flash('info', 'Flash is back!')
+  res.redirect('/');
+});
+
+  const User = require('./models/user.js'); //Needed model
 app.post('/signup', function(req, res){
-  const username = req.body.username;
   const firstName = req.body.firstName;
   const lastName = req.body.lastName;
   const eMail = req.body.eMail;
@@ -182,7 +211,6 @@ app.post('/signup', function(req, res){
   const password = req.body.password;
   const confirmPassword = req.body.confirmPassword;
 
-  req.checkBody('username', 'Username is required.').notEmpty();
   req.checkBody('firstName', 'First name is required.').notEmpty();
   req.checkBody('lastName', 'Last name is required.').notEmpty();
   req.checkBody('eMail', 'eMail is not valid.').isEmail();
@@ -200,7 +228,6 @@ app.post('/signup', function(req, res){
       });
     } else {
       let newUser = new User({
-        username: username,
         firstName: firstName,
         lastName: lastName,
         eMail: eMail,
@@ -213,7 +240,7 @@ app.post('/signup', function(req, res){
             console.log(err);
           }
       newUser.password=hash;
-      newUser.save(function(err){
+      db.users.insert(newUser, function(err, res){//newUser.save(function(err){
         if(err){
           console.log(err);
           return;
