@@ -4,10 +4,10 @@ const bodyParser = require('body-parser');
 const mongojs = require('mongojs'); //database scripting ?dont need anymore?
 const mongoose = require('mongoose');
 const path = require('path');
+const config = require('./config/database.js');
 
 //Signup:
 const expressValidator = require('express-validator');
-const User = require('./public/js/mongofizz');
 
 //Upload:
 const Grid = require('gridfs-stream'); // require Gridfs
@@ -15,18 +15,16 @@ const fs = require('fs'); // require filesystem module
 
 //Login:
 const passport = require('passport');
-<<<<<<< HEAD
 var port = process.env.PORT || 8080;
 var flash = require('connect-flash');
 var morgan = require('morgan');
 var cookieParser = require('cookie-parser');
 var session = require('express-session');
-var config = require('./config/database.js');
+
 const bcrypt = require('bcryptjs');
-=======
+
 const LocalStrategy = require('passport-local').Strategy;
 
->>>>>>> 7ad9fce05d4b4caa539dfaccde75fb7162688a3a
 //Browse:
 
 
@@ -38,7 +36,7 @@ const Song = require('./public/js/songUpload'); //needed model
 const app = express(); // set app to run express function
 //LOGIN PART 1
   //config
-mongoose.connect(config.url); //Connect to DB
+mongoose.connect('mongodb://localhost:27017/audiodb'); //Connect to DB
 require('./config/passport')(passport); //pass passport for configuration
 
   //setup expres
@@ -199,7 +197,7 @@ app.post('/upload',function(req, res){
 ///////////////////////////////////////////////////////////////////////////////////
 
 //////////////////////////////Sign-Up POST//////////////////////////////////////////
-<<<<<<< HEAD
+
 app.get('/flash', function(req, res){
   // Set a flash message by passing the key, followed by the value, to req.flash().
   req.flash('info', 'Flash is back!')
@@ -208,7 +206,8 @@ app.get('/flash', function(req, res){
 
   const User = require('./models/user.js'); //Needed model
 app.post('/signup', function(req, res){
-  const firstName = req.body.firstName;
+
+  var firstName = req.body.firstName;
   const lastName = req.body.lastName;
   const eMail = req.body.eMail;
   const confirmEMail = req.body.confirmEMail;
@@ -217,7 +216,7 @@ app.post('/signup', function(req, res){
 
   req.checkBody('firstName', 'First name is required.').notEmpty();
   req.checkBody('lastName', 'Last name is required.').notEmpty();
-  req.checkBody('eMail', 'eMail is not valid.').isEmail();
+  //req.checkBody('eMail', 'eMail is not valid.').isEmail();
   req.checkBody('eMail', 'eMail is required.').notEmpty();
   req.checkBody('confirmEMail', 'Confirm eMail is required.').notEmpty();
   req.checkBody('password', 'password is required.').notEmpty();
@@ -227,15 +226,13 @@ app.post('/signup', function(req, res){
 //If unsuccessful
     if(errors){
       console.log('Sign-Up was unsuccessful');
-      res.render('signup', {
-        title: 'AudioPhiles'
-      });
+      res.render('signup');
     } else {
       let newUser = new User({
-        firstName: firstName,
-        lastName: lastName,
-        eMail: eMail,
-        password: password
+        firstName: req.body.firstName,
+        lastName: req.body.lastName,
+        eMail: req.body.eMail,
+        password: req.body.password
       });//If successful
 //Generate salt to hide password
         bcrypt.genSalt(8, function(err, salt){
@@ -244,19 +241,16 @@ app.post('/signup', function(req, res){
             console.log(err);
           }
       newUser.password=hash;
-      db.users.insert(newUser, function(err, res){//newUser.save(function(err){
-        if(err){
-          console.log(err);
-          return;
-        } else {
-          res.redirect('/login')
-        }//Redirect to login if successful
+
       });
     });
-  });
+    db.collection('users').insert(newUser);
+    res.redirect('/login')
+      //Redirect to login if successful
+
 }
 });
-///////////////////////////// Login Process /////////////////////////////////////IDEA:IDEA:IDEA:IDEA:IDEA:
+///////////////////////////// Login Process /////////////////////////////////////
 app.post('/login', function(req, res, next){
   passport.authenticate('local', {
     successRedirect: '/',

@@ -1,7 +1,7 @@
 <% include partials/header %>
 <div id = "container-fluid">
   <div>
-    <form method="post" action="/signup"> <!--/signup is where you are sending post request -->
+    <form action="/signup" method="post" > <!--/signup is where you are sending post request -->
        <div id=form-group>
            <label>First Name:</label>
               <input type="text" class="form-control" name="firstName">
@@ -21,10 +21,9 @@
      <div id=form-group>
          <label>Confirm Password:</label>
             <input type="password" class="form-control" name="confirmPassword">
+            <input type="submit" name="submit" value="submit"> 
      </div>
-     <div>
-         <button class="btn" type="submit" >Sign Up!</button>
-       </div>
+
 </form>
 </div>
 
