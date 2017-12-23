@@ -154,13 +154,17 @@ app.get('/signup',function (req, res){
 
 ///////////////////////////////////////////////////////////////////////////////////
 
-app.post('/browse',function(req,res){
+app.get('/music', function(req,res){
   console.log('howdy');
+  //load songs
+  console.log(req.query.id);
+
+
 });
 ///////////////////////////////  UPLOAD POST METHOD //////////////////////////////////////
 /* upload */
 
-app.post('/upload',function(req, res){
+app.post('/upload', function(req, res){
 
   //form validation
   req.checkBody('title', 'Title is Required').notEmpty();

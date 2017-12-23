@@ -40,7 +40,7 @@
 				<% songs.forEach(function(song) { %>
 					<div class="row">
 						<div class="col-3">
-							<button id="titlePlay-button" > <%= song.metadata.title %> </button>
+							<button id="titlePlay-button" value="<%= song._id %>"> <%= song.metadata.title %> </button>
 						</div>
 		        <div class="col-3">
 		        	<button ><%= song.metadata.artist %> </button>
