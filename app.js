@@ -99,17 +99,14 @@ app.get('/',function (req, res){
 /*  browse ejs  */
 app.get('/browse',function (req, res){
  /* access song files, assign to docs */
- Song.find({}, function(err, songs){
-   if(err){
-     console.log(err);
-   }else{
-     console.log(songs);
+ var filesColl = db.collection('fs.files');
+ var filesQuery = filesColl.find({});
+ filesQuery.toArray(function(error, docs) {
 
    res.render('browse',{
         title: "Your Library",
-       songs: songs
+       songs: docs
      });
- }
 })
 });
 
