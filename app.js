@@ -8,6 +8,7 @@ const path = require('path');
 //Signup:
 const bcrypt = require('bcryptjs');
 const expressValidator = require('express-validator');
+const User = require('./public/js/mongofizz');
 
 //Upload:
 const Grid = require('gridfs-stream'); // require Gridfs
@@ -16,6 +17,7 @@ const fs = require('fs'); // require filesystem module
 //Login:
 const config = require('./config/database');
 const passport = require('passport');
+const LocalStrategy = require('passport-local').Strategy;
 
 //Browse:
 
@@ -24,7 +26,6 @@ const passport = require('passport');
 const Song = require('./public/js/songUpload'); //needed model
 
 ///////////////////////////////////////////////////////////////////////////////////
-
 /////////////////////////////// App Initialize ////////////////////////////////////
 const app = express(); // set app to run express function
 /*  View Engine - Embedded Javascript(.EJS) */
@@ -75,8 +76,6 @@ app.use(expressValidator({
 }));
 /////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////Passport MiddleWare/////////////////////////////////////
-require('./config/passport')(passport);
-
 app.use(passport.initialize());
 app.use(passport.session());
 //IDEA: WHEN WE HAVE USERS, IN OUR CSS WE CAN SET IT TO SEE LOGIN IF LOGGED OUT AND LOGOUT IF LOGGED IN
@@ -129,13 +128,6 @@ app.get('/signup',function (req, res){
 
 ///////////////////////////////////////////////////////////////////////////////////
 
-/* play */
-
-app.post('/browse', function (req, res) {
-  console.log('Song title clicked.');
-  //
-});
-
 ///////////////////////////////  UPLOAD POST METHOD //////////////////////////////////////
 /* upload */
 
@@ -179,7 +171,6 @@ app.post('/upload',function(req, res){
 ///////////////////////////////////////////////////////////////////////////////////
 
 //////////////////////////////Sign-Up POST//////////////////////////////////////////
-  const User = require('./public/js/mongofizz'); //Needed model
 app.post('/signup', function(req, res){
   const username = req.body.username;
   const firstName = req.body.firstName;
@@ -232,15 +223,45 @@ app.post('/signup', function(req, res){
   });
 }
 });
-///////////////////////////// Login Process /////////////////////////////////////
+///////////////////////////// Login Process /////////////////////////////////////IDEA:IDEA:IDEA:IDEA:IDEA:
 app.post('/login', function(req, res, next){
   passport.authenticate('local', {
     successRedirect: '/',
     failureRedirect: '/login',
-    failureFlash: false
-  })(req, res, next);
+    failureFlash: true })(req, res, next);
 });
 
+module.exports = function(passport){
+  //Implement Local Strategy (Through MongoDB)
+  passport.use(new LocalStrategy(function(username, password, done){
+    //Match username
+    let query = {username:username};
+    User.findOne(query, function(err, user){
+      if(err) throw err;
+      if(!user){
+        return done(null, false, {message: 'No user found'});
+      }
+    //Match password
+    bcrypt.compare(password, users.password, function(err, isMatch){
+      if(err) throw err;
+      if(isMatch){
+        return done(null, user);
+      } else {
+        return done(null, false, {message: 'Password is incorrect!'});
+      }
+    });
+    });
+  }));
+  passport.serializeUser(function(user, done){
+    done(null, user.id);
+  });
+
+  passport.deserializeUser(function(id, done){
+    User.findById(id, function(err, user){
+        done(err, user);
+});
+});
+}
 ///////////////////////////// Localhost Port /////////////////////////////////////
 app.listen(8080, function(){
   console.log('Server Started on Port 8080...');
