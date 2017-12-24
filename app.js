@@ -158,7 +158,10 @@ app.get('/music', function(req,res){
   console.log('howdy');
   //load songs
   console.log(req.query.id);
-
+  var filesColl = db.collection('fs.files');
+  var filesQuery = filesColl.find({});
+  audioID = req.query.id;
+  filesQuery.read({_id: audioID});
 
 });
 ///////////////////////////////  UPLOAD POST METHOD //////////////////////////////////////
