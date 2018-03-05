@@ -12,7 +12,7 @@ Things to do:
 Begin to add slideshows
 Style Media Player(attach functionality to library files)
 Create Personalized User library
-<b> Figure out how to run mongodb between the two of us so we can begin to add music </b>
 
 
-Notes:
+
+Notes: currently out of use - beginning to transition to electron
